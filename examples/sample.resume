@@ -1,0 +1,72 @@
+name: John Doe
+preferred_name: Johnny
+
+contact:
+  email: john.doe@example.com
+  phone: "+1 (555) 123-4567"
+  linkedin: https://www.linkedin.com/in/johndoe
+  website: https://www.johndoe.com
+  github: https://github.com/johndoe
+
+education:
+  - institution: University of Example
+    degree: Bachelor of Science in Computer Science
+    dates: 
+      start: August 2016
+      graduation: May 2020
+    gpa: 
+      value: 3.8
+      scale: 4
+
+experience:
+  - company: Tech Solutions Inc.
+    position: Software Engineer
+    dates: 
+      start: June 2020
+      end: Present
+    responsibilities:
+      - Developed and maintained web applications using React and Node.js
+      - Collaborated with cross-functional teams to deliver high-quality software
+
+  - company: StartUp Co.
+    position: Junior Developer
+    dates: 
+      start: May 2019
+      end: August 2019
+    responsibilities:
+      - Assisted in the development of a mobile app using Flutter
+      - Participated in code reviews and agile development processes
+
+projects:
+  - name: Personal Portfolio Website
+    description: Designed and developed a responsive portfolio website
+    technologies: 
+      - HTML
+      - CSS
+      - JavaScript
+
+  - name: Task Management App
+    description: Created a full-stack task management application
+    technologies:
+      - React
+      - Express.js
+      - MongoDB
+
+skills:
+  - Python
+  - JavaScript
+  - Java
+  - React
+  - Node.js
+  - Express.js
+  - Git
+  - Docker
+  - AWS
+
+additional_info:
+  us_specific:
+    veteran_status: Non-veteran
+    disability_status: No disability
+    diversity_info: 
+      ethnicity: Prefer not to say
+      gender: Male
