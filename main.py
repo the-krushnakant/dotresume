@@ -11,6 +11,10 @@ def main():
     args = parser.parse_args()
     file_path = args.path_to_yaml_file
 
+    if not file_path.endswith('.resume'):
+        print("Error: File must have a .resume extension.")
+        sys.exit(1)
+
     try:
         with open(file_path, 'r') as file:
             yaml_string = file.read()
