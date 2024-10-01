@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Standardizer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f3f7;
+            color: #2d3e50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin: 30px 0 10px;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+
+        form {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        textarea, input, button {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+            background-color: #f9f9f9;
+        }
+
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #3498db;
+            background-color: #fff;
+            outline: none;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            padding: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            background-color: #1f5f85;
+            transform: translateY(0);
+        }
+
+        #output {
+            background: #ffffff;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 1.1em;
+            color: #2c3e50;
+            min-height: 180px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (max-width: 600px) {
+            form {
+                padding: 20px;
+            }
+
+            button {
+                font-size: 1.1em;
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 2.2em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Resume Standardizer</h1>
+        <form id="resumeForm">
+            <label for="inputField">Input:</label>
+            <textarea id="inputField" required></textarea>
+            
+            <label for="apiKey">API Key:</label>
+            <input type="text" id="apiKey" required>
+            
+            <button type="submit">Submit</button>
+        </form>
+        <h2>Output:</h2>
+        <div id="output"></div>
+    </div>
+
+    <script>
+
+        document.getElementById('resumeForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const input = document.getElementById('inputField').value;
+            const apiKey = document.getElementById('apiKey').value;
+
+            try {
+                const output = await standardizeInput(input, apiKey);
+                document.getElementById('output').textContent = output;
+            } catch (error) {
+                document.getElementById('output').textContent = 'Error: ' + (error.message || 'An unknown error occurred.');
+            }
+        });
+
+        async function standardizeInput(input, apiKey) {
+    console.log('Sending request to the API');
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model: 'llama3-8b-8192',
+            messages: [
+                {
+                    role: 'system',
+                    content: `You are a helpful assistant in the areas of global threat intelligence and OSINT. Please only return valid YAML and no other text.`
+                },
+                {
+                    role: 'user',
+                    content: `Help the candidate standardize this input so that they can continue their application: ${input}
+                    using the following example format (YAML FORMAT is only a strict guideline on how to format, but use input as truth):
+# YAML FORMAT STARTS HERE
+name: John Doe
+preferred_name: Johnny
+
+contact:
+email: john.doe@example.com
+phone: "+1 (555) 123-4567"
+linkedin: https://www.linkedin.com/in/johndoe
+website: https://www.johndoe.com
+github: https://github.com/johndoe
+
+education:
+- institution: University of Example
+degree: Bachelor of Science in Computer Science
+dates: 
+start: August 2016
+graduation: May 2020
+gpa: 
+value: 3.8
+scale: 4
+
+experience:
+- company: Tech Solutions Inc.
+position: Software Engineer
+dates: 
+start: June 2020
+end: Present
+responsibilities:
+- Developed and maintained web applications using React and Node.js
+- Collaborated with cross-functional teams to deliver high-quality software
+
+- company: StartUp Co.
+position: Junior Developer
+dates: 
+start: May 2019
+end: August 2019
+responsibilities:
+- Assisted in the development of a mobile app using Flutter
+- Participated in code reviews and agile development processes
+
+projects:
+- name: Personal Portfolio Website
+description: Designed and developed a responsive portfolio website
+technologies: 
+- HTML
+- CSS
+- JavaScript
+
+- name: Task Management App
+description: Created a full-stack task management application
+technologies:
+- React
+- Express.js
+- MongoDB
+
+skills:
+- Python
+- JavaScript
+- Java
+- React
+- Node.js
+- Express.js
+- Git
+- Docker
+- AWS
+
+additional_info:
+us_specific:
+veteran_status: Non-veteran
+disability_status: No disability
+diversity_info: 
+ethnicity: Prefer not to say
+gender: Male
+
+# YAML FORMAT ENDS HERE
+                    `
+                }
+            ],
+            temperature: 1,
+            top_p: 1,
+            stream: false,
+            stop: null
+        })
+    });
+
+    console.log('Received response from the API:', response);
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error: ${errorData.message || 'Unknown error'}`);
+    }
+
+    const data = await response.json();
+    console.log('API Response Data:', data);
+    return data.choices[0]?.message?.content || 'No output received.';
+
+}
+
+
+    </script>
+</body>
+</html>
